@@ -51,10 +51,10 @@ https.get('https://gateway.marvel.com:443/v1/public/characters?apikey=99a1ed5485
 router.get('/heros',async(req,res)=>{
     try{
       const products = await heros.find({})
-        .skip(req.query.page)
-        .limit(20)
+        .skip(Number(req.query.page))
+        .limit(1)
       res.send({products});
-
+      console.log(req.query.page)
     }catch(err){
 
         res.send("Error "+err)
@@ -80,7 +80,7 @@ router.get('/thumbnail',async(req,res)=>{
       res.send(r);
   
     }catch(err){
-  
+        
         res.send("Error "+err)}
     })
 module.exports = router
