@@ -9,7 +9,7 @@ const router = express.Router()
 
 router.get('/get-from-marvel',async(req,res)=>{
     //const num=req.body.number
-    const https = require('http');
+    const https = require('https');
 
 https.get('https://gateway.marvel.com:443/v1/public/characters?apikey=99a1ed54851065f4c0f8e5275cebd427&hash=c6ba8c70231271cbd20a52c2f10a3f1c&ts=1', (resp) => {
   let data = '';
@@ -20,22 +20,21 @@ https.get('https://gateway.marvel.com:443/v1/public/characters?apikey=99a1ed5485
     array=JSON.parse(data)["data"]["results"]
    array.forEach(element => {
   //save image url 
-        const rev= new thumbnail({
+        const thum= new thumbnail({
             path:element["thumbnail"]["path"],
-            extension:relement["thumbnail"]["extension"],
+            extension:element["thumbnail"]["extension"],
         })
-        //const savedthumbnail=  rev.save()
+        const savedthumbnail=  thum.save()
        // save hero %%%%%%%%%%
-       const pd=new heros({
+       const hero=new heros({
            name: element["name"],
            description: element["description"],
            modified: element["modified"],
-           thumbnail: thumbnail._id,
+           thumbnail: thum._id,
        })
-       //const saveProduct =  pd.save()
-       //console.log(element)
-
-       res.send({heros});
+       const saveheros =  hero.save()
+       console.log(hero)
+       
 
        
    });
@@ -48,4 +47,40 @@ https.get('https://gateway.marvel.com:443/v1/public/characters?apikey=99a1ed5485
     
       
 })
+
+router.get('/heros',async(req,res)=>{
+    try{
+      const products = await heros.find({})
+        .skip(req.query.page)
+        .limit(20)
+      res.send({products});
+
+    }catch(err){
+
+        res.send("Error "+err)
+    }
+})
+
+router.get('/heros/:id',async(req,res)=>{
+    try{
+  
+      const p= await heros.findById(req.params.id)
+      res.send(p);
+  
+    }catch(err){
+  
+        res.send("Error "+err)
+    }
+  })
+
+router.get('/thumbnail',async(req,res)=>{
+    try{
+      const r = await thumbnail.find(req.body)
+      console.log(req.body)
+      res.send(r);
+  
+    }catch(err){
+  
+        res.send("Error "+err)}
+    })
 module.exports = router

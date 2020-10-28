@@ -11,8 +11,7 @@ const con = mongoose.connection
 con.on('open',function(){
     console.log('database opened')
 })
-const myrouter = require('../mongdb/contoller')
-//app.use(bodyParser);
+const myrouter = require('./controller')
 app.use(express.json())
 app.use('/',myrouter)
 app.listen(9090,()=> {console.log('hello from node server ...')})

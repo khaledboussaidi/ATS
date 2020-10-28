@@ -11,7 +11,7 @@ const herosSchema = new mongoose.Schema({
         type:Date
     },
     thumbnail:{
-        type:ObjectId,
+        type : ObjectID,
         ref:'thumbnail'
     },
     })
